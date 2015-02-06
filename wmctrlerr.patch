@@ -1,0 +1,25 @@
+commit e20de264dc447a26f4be2d8c6d3fc557c69de997
+Author: canaar <abhilashmhaisne@gmail.com>
+Date:   Fri Feb 6 20:01:31 2015 +0530
+
+    Display error when wmctrl is not installed, and quickly exit the program.
+
+diff --git a/mkcast b/mkcast
+index c175771..6847e98 100755
+--- a/mkcast
++++ b/mkcast
+@@ -54,7 +54,12 @@ fi
+ # get screen dimensions
+ IFS='x' read sw sh < <(xdpyinfo | grep dimensions | grep -o '[0-9x]*' | head -n1)
+ # get window geometry
+-read wx wy ww wh < <(wmctrl -lG | grep $win | sed 's/^[^ ]* *[^ ]* //;s/[^0-9 ].*//;')
++if ! type wmctrl > /dev/null; then
++       echo "Error. wmctrl is not installed."
++       exit 0
++else
++       read wx wy ww wh < <(wmctrl -lG | grep $win | sed 's/^[^ ]* *[^ ]* //;s/[^0-9 ].*//;')
++fi
+ # compute and set new coordinates
+ wx=$(($sw/2-$ww/2))
+ wy=$(($sh-$wh))
+~                                 
